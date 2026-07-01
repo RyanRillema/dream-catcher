@@ -50,7 +50,13 @@ router.post('/', async (req, res) => {
       interpretation = await getDreamInterpretation(validation.value);
     } catch (aiError) {
       console.error('AI interpretation failed:', aiError);
-      return res.status(503).json({ 
+      if (aiError.code === 'insufficient_credits') {
+        return res.status(402).json({
+          error: 'AI service is out of credits. Please try again later.',
+          type: 'ai_credit_limit'
+        });
+      }
+      return res.status(503).json({
         error: 'AI service temporarily unavailable.',
         type: 'ai_error'
       });

@@ -30,6 +30,12 @@ export async function getDreamInterpretation(dreamText) {
     return message.choices[0].message.content.trim();
   } catch (error) {
     console.error('OpenRouter API error:', error);
+    // OpenRouter returns HTTP 402 when the account has run out of credits
+    if (error.status === 402) {
+      const creditError = new Error('OpenRouter credit limit exceeded');
+      creditError.code = 'insufficient_credits';
+      throw creditError;
+    }
     throw new Error(`API error: ${error.message}`);
   }
 }
