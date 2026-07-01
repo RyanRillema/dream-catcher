@@ -1,7 +1,6 @@
-cd to the folder and then:
-  innit
-  add . 
-  commit -m <commit message>
-  remote add origin <url>
-  branch -M <branch name>
-  push -u origin <branch name>
+Open up a terminal
+The command is
+    curl <address including protocol>
+In Scrimba and local environments, you will need to use localhost and port for the address. 
+localhost uses the http protocol.
+    e.g http://localhost:8001/my-endpoint
