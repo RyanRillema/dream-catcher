@@ -1,16 +1,15 @@
 import OpenAI from 'openai';
 const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY
+  apiKey: process.env.OPENAI_API_KEY
   });
 
-// Call OpenRouter API for dream interpretation
+// Call OpenAI API for dream interpretation
 export async function getDreamInterpretation(dreamText) {
-  if (!process.env.OPENROUTER_API_KEY) {
-    throw new Error('Server misconfigured: OPENROUTER_API_KEY is missing');
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('Server misconfigured: OPENAI_API_KEY is missing');
   }
 
-  const model = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
   try {
     const message = await openai.chat.completions.create({
@@ -29,13 +28,7 @@ export async function getDreamInterpretation(dreamText) {
     });
     return message.choices[0].message.content.trim();
   } catch (error) {
-    console.error('OpenRouter API error:', error);
-    // OpenRouter returns HTTP 402 when the account has run out of credits
-    if (error.status === 402) {
-      const creditError = new Error('OpenRouter credit limit exceeded');
-      creditError.code = 'insufficient_credits';
-      throw creditError;
-    }
+    console.error('OpenAI API error:', error);
     throw new Error(`API error: ${error.message}`);
   }
 }
